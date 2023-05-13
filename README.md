@@ -26,5 +26,14 @@ No primeiro terminal rodar npm run dev
 
 No segundo terminal rodar curl localhost:3000, ou http://localhost:3000/ no browser.
 
+Complementar o api.js com o app conforme abaixo:
 
+const app = createServer(handler)
+.listen(3000, () => console.log('Listening at port 3000'))
+
+export { app }
+
+e rodar o npm run test:dev
+
+Começar a implementar os testes no api.test.js
 
