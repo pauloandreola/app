@@ -4,5 +4,7 @@ async function handler(req, res) {
   res.end('Hello world')
 }
 
-createServer(handler)
+const app = createServer(handler)
 .listen(3000, () => console.log('Listening at port 3000'))
+
+export { app }
