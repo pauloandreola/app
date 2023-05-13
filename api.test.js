@@ -6,6 +6,7 @@ const BASE_URL = 'http://localhost:3000'
 
 describe('API workflow', () => {
   let _server = {}
+  let _globalToken = ''
   before(async ()=> {
     _server = (await import('./api.js')).app
     await new Promise(resolve => _server.onde('Listening', resolve))
@@ -38,5 +39,31 @@ describe('API workflow', () => {
     strictEqual( req.status, 200)
     const res = await req.json()
     ok(res.token, ' token should be present')
+    _globalToken = res.token
   })
+
+  it ('Should not be allowed to access private data without a token', async()=> {
+    const req = await fetch(`${BASE_URL}/login`, {
+      method: 'GET',
+      headers: {
+        authorization: ''
+      }
+    })
+    strictEqual( req.status, 400)
+    const res = await req.json()
+    deepStrictEqual(res, { error: 'invalid token!' })
+  })
+
+  it ('Should be allowed to access private data with a valid token', async()=> {
+    const req = await fetch(`${BASE_URL}/login`, {
+      method: 'GET',
+      headers: {
+        authorization: _globalToken
+      }
+    })
+    strictEqual( req.status, 200)
+    const res = await req.json()
+    deepStrictEqual(res, { result: 'Welcome aboard' })
+  })
+
 })
