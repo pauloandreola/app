@@ -1,6 +1,6 @@
 import { describe, before, after, it } from 'node:test'
 import { strictEqual } from 'node:assert/strict'
-import { deepStrictEqual } from 'node:assert'
+import { deepStrictEqual, ok } from 'node:assert'
 
 const BASE_URL = 'http://localhost:3000'
 
@@ -24,5 +24,19 @@ describe('API workflow', () => {
     strictEqual( req.status, 401)
     const res = await req.json()
     deepStrictEqual(res, { error: 'user invalid'})
+  })
+
+  it ('Should login successfully given user and password', async()=> {
+    const data = {
+      user: 'Paulo Andreola',
+      password: '1234' 
+    }
+    const req = await fetch(`${BASE_URL}/login`, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+    strictEqual( req.status, 200)
+    const res = await req.json()
+    ok(res.token, ' token should be present')
   })
 })
